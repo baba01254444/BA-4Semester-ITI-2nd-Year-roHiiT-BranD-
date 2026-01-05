@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BA & ITI Mock Test | Rohit Yadav</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --secondary: #a777e3;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .quiz-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 { color: #333; font-size: 24px; }
+        .subject-tag { color: var(--primary); font-weight: bold; margin-bottom: 10px; display: block; }
+
+        /* Stylish Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+        }
+
+        /* Patti Styles */
+        .patti {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .green-patti { background-color: var(--success); color: white; display: block; }
+        .red-patti { background-color: var(--danger); color: white; display: block; }
+
+        #feedback-text {
+            margin-top: 15px;
+            font-style: italic;
+            color: #555;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-weight: bold;
+            color: #444;
+            letter-spacing: 1px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-card">
+        <h1>Online Mock Test</h1>
+        
+        <div id="menu">
+            <p>Apna Subject Chune:</p>
+            <button class="btn" onclick="loadQuestion('hindi')">BA - Hindi</button>
+            <button class="btn" onclick="loadQuestion('english')">BA - English</button>
+            <button class="btn" onclick="loadQuestion('sociology')">BA - Sociology</button>
+            <button class="btn" style="background: #34495e;" onclick="loadQuestion('fitter')">ITI - Fitter Trade</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <span id="subject-name" class="subject-tag"></span>
+            <h3 id="question">Sawal yahan aayega?</h3>
+            <div id="options">
+                </div>
+            <div id="patti-box" class="patti"></div>
+            <p id="feedback-text"></p>
+            <button class="btn" style="background: #95a5a6; margin-top: 20px;" onclick="resetQuiz()">Back to Menu</button>
+        </div>
+    </div>
+
+    <footer>Developed By "Rohit Yadav"</footer>
+
+    <script>
+        const quizData = {
+            hindi: {
+                sub: "BA 3rd Sem - Hindi",
+                q: "आधुनिक हिंदी साहित्य का जनक किसे माना जाता है?",
+                options: ["तुलसीदास", "भारतेंदु हरिश्चंद्र", "प्रेमचंद", "कबीरदास"],
+                correct: 1,
+                feedback: "Bharatendu Harishchandra ne modern Hindi literature ki neev rakhi thi."
+            },
+            english: {
+                sub: "BA 3rd Sem - English",
+                q: "Who wrote the play 'Macbeth'?",
+                options: ["John Milton", "William Wordsworth", "William Shakespeare", "PB Shelley"],
+                correct: 2,
+                feedback: "Shakespeare is famous for his tragedies like Macbeth and Hamlet."
+            },
+            sociology: {
+                sub: "BA 3rd Sem - Sociology",
+                q: "समाजशास्त्र का जनक (Father of Sociology) किसे कहा जाता है?",
+                options: ["अगस्त कॉम्टे", "कार्ल मार्क्स", "मैक्स वेबर", "अरस्तू"],
+                correct: 0,
+                feedback: "Auguste Comte ne 1838 mein 'Sociology' shabd ka prayog kiya tha."
+            },
+            fitter: {
+                sub: "ITI - Fitter (Chapter 1)",
+                q: "Bench Vice की बॉडी किस मटेरियल की बनी होती है?",
+                options: ["Mild Steel", "Cast Iron", "High Carbon Steel", "Aluminium"],
+                correct: 1,
+                feedback: "Bench Vice ki body aksar Grey Cast Iron se bani hoti hai."
+            }
+        };
+
+        function loadQuestion(subject) {
+            const data = quizData[subject];
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            document.getElementById('subject-name').innerText = data.sub;
+            document.getElementById('question').innerText = data.q;
+            
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            
+            data.options.forEach((opt, index) => {
+                const button = document.createElement('button');
+                button.className = 'btn';
+                button.style.background = '#fff';
+                button.style.color = '#333';
+                button.style.border = '2px solid #ddd';
+                button.innerText = opt;
+                button.onclick = () => checkAnswer(index, data.correct, data.feedback, button);
+                optionsDiv.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected, correct, feedback, btnElement) {
+            const patti = document.getElementById('patti-box');
+            const feedbackPara = document.getElementById('feedback-text');
+            
+            // Disable all buttons after click
+            const allBtns = document.querySelectorAll('#options .btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selected === correct) {
+                // Right Answer
+                btnElement.classList.add('green-patti');
+                patti.innerText = "Sahi Utar!";
+                patti.className = "patti green-patti";
+            } else {
+                // Wrong Answer
+                btnElement.classList.add('red-patti');
+                patti.innerText = "Galat Utar!";
+                patti.className = "patti red-patti";
+                
+                // Vibration 300ms
+                if (navigator.vibrate) {
+                    navigator.vibrate(300);
+                }
+            }
+            feedbackPara.innerText = "Feedback: " + feedback;
+        }
+
+        function resetQuiz() {
+            document.getElementById('menu').classList.remove('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('patti-box').className = "patti";
+            document.getElementById('feedback-text').innerText = "";
+        }
+    </script>
+</body>
+</html>
